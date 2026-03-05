@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes marquee {
+  0% { transform: translateX(100%) }
+  100% { transform: translateX(-100%) }
+}
+
+.animate-marquee {
+  display: inline-block;
+  min-width: 100%;
+  animation: marquee 75s linear infinite;
+}
+.input{
+@apply border rounded-lg px-3 py-2 text-sm w-full;
+}
+.card-active{
+    transform: scale(1.06);
+    outline: 3px solid white;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+}
+.chart-btn{
+    padding:6px 12px;
+    font-size:12px;
+    border-radius:10px;
+    background:#f1f5f9;
+    transition:0.2s;
+}
+
+.chart-btn:hover{
+    background:#6366f1;
+    color:white;
+}
