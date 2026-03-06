@@ -26,4 +26,6 @@ RUN chmod -R 775 bootstrap/cache
 
 EXPOSE 8080
 
-CMD php artisan config:clear && php -S 0.0.0.0:$PORT -t public
+CMD php artisan config:clear \
+ && php artisan cache:clear \
+ && php -S 0.0.0.0:$PORT -t public
