@@ -21,7 +21,10 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
+# 🔴 penting
 RUN php artisan config:clear
+RUN php artisan cache:clear
+RUN php artisan route:clear
 
 EXPOSE 8080
 
