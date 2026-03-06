@@ -21,6 +21,10 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
+# 🔴 penting untuk Laravel
+RUN chmod -R 775 storage
+RUN chmod -R 775 bootstrap/cache
+
 EXPOSE 8080
 
 CMD php -S 0.0.0.0:$PORT -t public
