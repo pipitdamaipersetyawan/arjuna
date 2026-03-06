@@ -21,11 +21,8 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-RUN chmod -R 775 storage
-RUN chmod -R 775 bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 8080
 
-CMD php artisan config:clear \
- && php artisan cache:clear \
- && php -S 0.0.0.0:$PORT -t public
+CMD php -S 0.0.0.0:$PORT -t public
