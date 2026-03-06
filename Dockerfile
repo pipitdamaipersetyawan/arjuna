@@ -26,6 +26,9 @@ COPY . .
 # Install Laravel dependencies
 RUN composer install --no-dev --optimize-autoloader
 
+# Laravel optimization
+RUN php artisan config:clear
+
 EXPOSE 8080
 
-CMD php artisan migrate --force && php -S 0.0.0.0:$PORT -t public
+CMD php -S 0.0.0.0:$PORT -t public
