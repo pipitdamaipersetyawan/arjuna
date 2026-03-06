@@ -21,11 +21,11 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
+# Hapus config cache lama
+RUN rm -f bootstrap/cache/config.php
+
 RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 8080
 
-CMD php artisan config:clear \
- && php artisan cache:clear \
- && php artisan migrate --force \
- && php -S 0.0.0.0:$PORT -t public
+CMD php -S 0.0.0.0:$PORT -t public
