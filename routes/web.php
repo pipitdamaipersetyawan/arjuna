@@ -223,6 +223,15 @@ Route::post('/logout', function () {
 })->name('logout');
 
 Route::get('/fixdb', function () {
+    Artisan::call('config:clear');
+    Artisan::call('cache:clear');
     Artisan::call('migrate', ['--force' => true]);
     return 'Database migration berhasil';
+});
+
+Route::get('/clear', function () {
+    Artisan::call('config:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('config:cache');
+    return 'Config cleared';
 });
