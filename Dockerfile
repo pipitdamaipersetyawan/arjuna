@@ -31,7 +31,7 @@ RUN composer install --no-dev --optimize-autoloader
 # Install frontend dependencies
 RUN npm install
 
-# Build Vite assets
+# Build assets
 RUN npm run build
 
 # Permission Laravel
@@ -39,9 +39,8 @@ RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 8080
 
-# Clear cache agar Railway variables terbaca
 CMD php artisan config:clear && \
     php artisan cache:clear && \
-    php artisan view:clear && \
-    php artisan route:clear && \
+    php artisan config:cache && \
+    php artisan migrate --force && \
     php artisan serve --host=0.0.0.0 --port=8080
