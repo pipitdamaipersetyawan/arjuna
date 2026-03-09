@@ -25,17 +25,23 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy project
 COPY . .
 
-# Install PHP packages
+# Install Laravel dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Install Node packages
+# Install frontend dependencies
 RUN npm install
 
 # Build Vite assets
 RUN npm run build
 
+# Permission Laravel
 RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 8080
 
-CMD php artisan serve --host=0.0.0.0 --port=8080
+# Clear cache agar Railway variables terbaca
+CMD php artisan config:clear && \
+    php artisan cache:clear && \
+    php artisan view:clear && \
+    php artisan route:clear && \
+    php artisan serve --host=0.0.0.0 --port=8080

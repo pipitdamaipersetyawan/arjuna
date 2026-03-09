@@ -13,6 +13,7 @@ use App\Http\Controllers\LaporanController;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\KlasifikasiImport;
 use App\Imports\KlasifikasiUpdateNamaImport;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -220,3 +221,8 @@ Route::post('/logout', function () {
     request()->session()->regenerateToken();
     return redirect('/');
 })->name('logout');
+
+Route::get('/fixdb', function () {
+    Artisan::call('migrate', ['--force' => true]);
+    return 'Database migration berhasil';
+});
