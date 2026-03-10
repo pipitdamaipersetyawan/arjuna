@@ -78,15 +78,14 @@
 
 
                         <!-- LOGOUT -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
+                       <form method="POST" action="{{ route('logout') }}" x-data>
+    @csrf
 
-                            <button type="submit"
-                                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                Log Out
-                            </button>
-
-                        </form>
+    <x-dropdown-link href="{{ route('logout') }}"
+        @click.prevent="$root.submit();">
+        Log Out
+    </x-dropdown-link>
+</form>
 
                     </x-slot>
 
