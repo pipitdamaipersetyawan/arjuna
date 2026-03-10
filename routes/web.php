@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\KlasifikasiController;
@@ -12,7 +10,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\ArsipController;
 use App\Http\Controllers\LaporanController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\KlasifikasiImport;
 use App\Imports\KlasifikasiUpdateNamaImport;
@@ -215,5 +212,5 @@ Route::middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->name('logout');
+// Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    // ->name('logout');
