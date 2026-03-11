@@ -8,56 +8,66 @@ use App\Models\SuratMasuk;
 use App\Models\Naskah;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\SuratMasukExport;
-use App\Exports\NaskahKeluarExport;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\SvgWriter;
+
+use App\Exports\SuratMasukExport;
+use App\Exports\NaskahKeluarExport;
 use App\Exports\ArsipExport;
 
 class LaporanController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | ================= SURAT MASUK =================
-    |--------------------------------------------------------------------------
-    */
 
-    private function filterSuratMasuk(Request $request)
-    {
-        $query = SuratMasuk::query();
+/*
+|--------------------------------------------------------------------------
+| ================= SURAT MASUK =================
+|--------------------------------------------------------------------------
+*/
 
-        if ($request->filled('start') && $request->filled('end')) {
-            $query->whereBetween('tanggal_surat', [
-                $request->start,
-                $request->end
-            ]);
-        }
+private function filterSuratMasuk(Request $request)
+{
+    $query = SuratMasuk::query();
 
-        if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('nomor_surat', 'like', '%'.$request->search.'%')
-                  ->orWhere('surat_dari', 'like', '%'.$request->search.'%')
-                  ->orWhere('isi_informasi', 'like', '%'.$request->search.'%');
-            });
-        }
-
-        return $query;
+    if ($request->filled('start') && $request->filled('end')) {
+        $query->whereBetween('tanggal_surat', [
+            $request->start,
+            $request->end
+        ]);
     }
 
-    public function suratMasuk(Request $request)
-    {
-        Carbon::setLocale('id');
+    if ($request->filled('search')) {
 
-        $data = $this->filterSuratMasuk($request)
-                     ->orderBy('tanggal_surat','asc')
-                     ->paginate(10)
-                     ->withQueryString();
+        $search = $request->search;
 
-        return view('pages.laporan.surat-masuk', compact('data'));
+        $query->where(function ($q) use ($search) {
+
+            $q->where('nomor_surat', 'like', "%$search%")
+              ->orWhere('surat_dari', 'like', "%$search%")
+              ->orWhere('isi_informasi', 'like', "%$search%");
+
+        });
+
     }
 
-    public function suratMasukPdf(Request $request)
+    return $query;
+}
+
+
+public function suratMasuk(Request $request)
+{
+    Carbon::setLocale('id');
+
+    $data = $this->filterSuratMasuk($request)
+        ->orderBy('tanggal_surat','asc')
+        ->paginate(10)
+        ->withQueryString();
+
+    return view('pages.laporan.surat-masuk', compact('data'));
+}
+
+
+public function suratMasukPdf(Request $request)
 {
 
 $data = $this->filterSuratMasuk($request)
@@ -68,7 +78,7 @@ $rows = $data->map(function($d){
 
 return [
 
-\Carbon\Carbon::parse($d->tanggal_surat)->format('d M Y'),
+Carbon::parse($d->tanggal_surat)->format('d M Y'),
 $d->surat_dari,
 $d->nomor_surat,
 $d->isi_informasi,
@@ -104,128 +114,159 @@ return $pdf->download('laporan-surat-masuk.pdf');
 
 }
 
-    public function suratMasukExcel(Request $request)
-    {
-        $data = $this->filterSuratMasuk($request)
-                     ->orderBy('tanggal_surat','asc')
-                     ->get();
 
-        return Excel::download(
-            new SuratMasukExport($data),
-            'laporan-surat-masuk.xlsx'
-        );
-    }
+public function suratMasukExcel(Request $request)
+{
 
-   /*
+$data = $this->filterSuratMasuk($request)
+    ->orderBy('tanggal_surat','asc')
+    ->get();
+
+return Excel::download(
+    new SuratMasukExport($data),
+    'laporan-surat-masuk.xlsx'
+);
+
+}
+
+
+/*
 |--------------------------------------------------------------------------
 | ================= NASKAH KELUAR =================
 |--------------------------------------------------------------------------
 */
 
+
 private function filterNaskahKeluar(Request $request)
 {
-    $query = Naskah::query();
 
-    // FILTER TANGGAL
-    if ($request->filled('start') && $request->filled('end')) {
-        $query->whereBetween('tanggal_surat', [
-            $request->start,
-            $request->end
-        ]);
-    }
+$query = Naskah::query();
 
-    // FILTER PENCARIAN
-    if ($request->filled('search')) {
+if ($request->filled('start') && $request->filled('end')) {
 
-        $search = $request->search;
+$query->whereBetween('tanggal_surat', [
+$request->start,
+$request->end
+]);
 
-        $query->where(function ($q) use ($search) {
-
-            $q->where('nomor_naskah', 'like', "%$search%")
-              ->orWhere('pengirim', 'like', "%$search%")
-              ->orWhere('hal', 'like', "%$search%");
-
-        });
-    }
-
-    return $query;
 }
+
+if ($request->filled('search')) {
+
+$search = $request->search;
+
+$query->where(function ($q) use ($search) {
+
+$q->where('nomor_naskah','like',"%$search%")
+->orWhere('pengirim','like',"%$search%")
+->orWhere('hal','like',"%$search%");
+
+});
+
+}
+
+return $query;
+
+}
+
 
 public function naskahKeluar(Request $request)
 {
-    $data = $this->filterNaskahKeluar($request)
-                 ->with('tujuan') // 🔥 penting
-                 ->orderBy('tanggal_surat','asc')
-                 ->paginate(10)
-                 ->withQueryString();
 
-    return view('pages.laporan.naskah-keluar', compact('data'));
+$data = $this->filterNaskahKeluar($request)
+->with('tujuan')
+->orderBy('tanggal_surat','asc')
+->paginate(10)
+->withQueryString();
+
+return view('pages.laporan.naskah-keluar', compact('data'));
+
 }
+
+
 public function naskahKeluarCetak(Request $request)
 {
-    $data = $this->filterNaskahKeluar($request)
-        ->with('tujuan')
-        ->orderBy('tanggal_surat','asc')
-        ->get();
 
-    return view('pages.laporan.cetak-naskah-keluar', compact('data'));
+$data = $this->filterNaskahKeluar($request)
+->with('tujuan')
+->orderBy('tanggal_surat','asc')
+->get();
+
+return view('pages.laporan.cetak-naskah-keluar', compact('data'));
+
 }
+
 
 public function naskahKeluarPdf(Request $request)
 {
-    $data = $this->filterNaskahKeluar($request)
-        ->with('tujuan')
-        ->orderBy('tanggal_surat','asc')
-        ->get();
 
-    $urlValidasi = route('laporan.naskah-keluar', $request->query());
+$data = $this->filterNaskahKeluar($request)
+->with('tujuan')
+->orderBy('tanggal_surat','asc')
+->get();
 
-    $qr = new QrCode(
-        data: $urlValidasi,
-        size: 150,
-        margin: 10
-    );
 
-    $writer = new SvgWriter();
-    $result = $writer->write($qr);
+$urlValidasi = route('laporan.naskah-keluar', $request->query());
 
-    $qrCode = base64_encode($result->getString());
 
-    $pdf = Pdf::loadView(
-        'pages.laporan.pdf-naskah-keluar',
-        compact('data','qrCode')
-    );
+$qr = new QrCode(
+data: $urlValidasi,
+size: 150,
+margin: 10
+);
 
-    $pdf->setPaper('A4', count($data) > 12 ? 'landscape' : 'portrait');
+$writer = new SvgWriter();
+$result = $writer->write($qr);
 
-    return $pdf->download('laporan-naskah-keluar.pdf');
+$qrCode = base64_encode($result->getString());
+
+
+$pdf = Pdf::loadView(
+'pages.laporan.pdf-naskah-keluar',
+compact('data','qrCode')
+);
+
+
+$pdf->setPaper('A4', count($data) > 12 ? 'landscape' : 'portrait');
+
+
+return $pdf->download('laporan-naskah-keluar.pdf');
+
 }
+
 
 public function naskahKeluarExcel(Request $request)
 {
-    $data = $this->filterNaskahKeluar($request)
-        ->with('tujuan')
-        ->orderBy('tanggal_surat','asc')
-        ->get();
 
-    return Excel::download(
-        new NaskahKeluarExport($data),
-        'laporan-naskah-keluar.xlsx'
-    );
+$data = $this->filterNaskahKeluar($request)
+->with('tujuan')
+->orderBy('tanggal_surat','asc')
+->get();
+
+return Excel::download(
+new NaskahKeluarExport($data),
+'laporan-naskah-keluar.xlsx'
+);
+
 }
-    /*
-    |--------------------------------------------------------------------------
-    | ================= ARSIP =================
-    |--------------------------------------------------------------------------
-    */
+
+
+
+/*
+|--------------------------------------------------------------------------
+| ================= ARSIP =================
+|--------------------------------------------------------------------------
+*/
+
 
 private function filterArsip(Request $request)
 {
-    $tahun = now()->year;
 
-    // SURAT MASUK
-    $suratMasuk = DB::table('surat_masuks')
-        ->select(
+$tahun = now()->year;
+
+
+$suratMasuk = DB::table('surat_masuks')
+->select(
 DB::raw("'Surat Masuk' as jenis"),
 'tanggal',
 'tanggal_surat',
@@ -234,62 +275,75 @@ DB::raw("'Surat Masuk' as jenis"),
 'isi_informasi as isi',
 'klasifikasi_kode'
 )
-        ->whereYear('tanggal', '<', $tahun);
+->whereYear('tanggal','<',$tahun);
 
-    // NASKAH KELUAR
-    $naskahKeluar = DB::table('naskahs')
-        ->select(
-            DB::raw("'Naskah Keluar' as jenis"),
-            'created_at as tanggal',
-            'tanggal_surat',
-            'nomor_naskah as nomor_surat',
-            'pengirim',
-            'hal as isi',
-            'klasifikasi_kode'
-        )
-        ->whereYear('tanggal_surat', '<', $tahun);
 
-    $union = $suratMasuk->unionAll($naskahKeluar);
+$naskahKeluar = DB::table('naskahs')
+->select(
+DB::raw("'Naskah Keluar' as jenis"),
+'created_at as tanggal',
+'tanggal_surat',
+'nomor_naskah as nomor_surat',
+'pengirim',
+'hal as isi',
+'klasifikasi_kode'
+)
+->whereYear('tanggal_surat','<',$tahun);
 
-    $query = DB::query()->fromSub($union,'arsip');
 
-    // SEARCH
-    if ($request->filled('search')) {
+$union = $suratMasuk->unionAll($naskahKeluar);
 
-        $query->where(function($q) use ($request){
+$query = DB::query()->fromSub($union,'arsip');
 
-            $q->where('nomor_surat','like','%'.$request->search.'%')
-              ->orWhere('pengirim','like','%'.$request->search.'%')
-              ->orWhere('isi','like','%'.$request->search.'%');
 
-        });
+if ($request->filled('search')) {
 
-    }
+$search = $request->search;
 
-    return $query;
+$query->where(function($q) use ($search){
+
+$q->where('nomor_surat','like',"%$search%")
+->orWhere('pengirim','like',"%$search%")
+->orWhere('isi','like',"%$search%");
+
+});
+
 }
+
+
+return $query;
+
+}
+
+
+
 public function arsip(Request $request)
 {
-    $data = $this->filterArsip($request)
-        ->orderBy('tanggal_surat','asc')
-        ->paginate(10)
-        ->withQueryString();
 
-    return view('pages.laporan.arsip', compact('data'));
+$data = $this->filterArsip($request)
+->orderBy('tanggal_surat','asc')
+->paginate(10)
+->withQueryString();
+
+return view('pages.laporan.arsip', compact('data'));
+
 }
+
+
 public function arsipPdf(Request $request)
 {
 
 $data = $this->filterArsip($request)
-    ->orderBy('tanggal_surat','asc')
-    ->get();
+->orderBy('tanggal_surat','asc')
+->get();
+
 
 $rows = $data->map(function($d){
 
 return [
 
 $d->jenis,
-\Carbon\Carbon::parse($d->tanggal_surat)->format('d M Y'),
+Carbon::parse($d->tanggal_surat)->format('d M Y'),
 $d->nomor_surat,
 $d->pengirim,
 $d->isi
@@ -297,6 +351,7 @@ $d->isi
 ];
 
 });
+
 
 $pdf = Pdf::loadView(
 
@@ -320,18 +375,24 @@ $pdf = Pdf::loadView(
 
 );
 
+
 return $pdf->download('laporan-arsip.pdf');
 
 }
+
+
 public function arsipExcel(Request $request)
 {
-    $data = $this->filterArsip($request)
-        ->orderBy('tanggal_surat','asc')
-        ->get();
 
-    return Excel::download(
-        new ArsipExport($data),
-        'laporan-arsip-inaktif.xlsx'
-    );
+$data = $this->filterArsip($request)
+->orderBy('tanggal_surat','asc')
+->get();
+
+return Excel::download(
+new ArsipExport($data),
+'laporan-arsip-inaktif.xlsx'
+);
+
 }
+
 }
