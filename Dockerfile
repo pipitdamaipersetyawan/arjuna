@@ -31,7 +31,6 @@ EXPOSE 8080
 
 CMD php artisan config:clear && \
     php artisan cache:clear && \
-    php artisan view:clear && \
     php artisan route:clear && \
-    php artisan storage:link && \
-    php -S 0.0.0.0:8080 -t public
+    php artisan view:clear && \
+    php -S 0.0.0.0:8080 -t public public/index.php
