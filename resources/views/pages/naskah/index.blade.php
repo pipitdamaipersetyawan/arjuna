@@ -1,5 +1,10 @@
 <x-app-layout>
 
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
+
 <div class="w-full px-4">
 
 {{-- HEADER --}}
@@ -149,16 +154,34 @@ Filter
 </td>
 
 <td class="p-3 border text-center">
-@if($item->file)
-<a href="{{ asset('storage/'.$item->file) }}" target="_blank"
-class="text-indigo-600 hover:underline text-xs">
+
+@if(!empty($item->file))
+
+<div class="flex justify-center gap-2">
+
+<a href="{{ Storage::url($item->file) }}"
+target="_blank"
+class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1 rounded">
+
 Preview
 </a>
-@else
--
-@endif
-</td>
 
+<a href="{{ Storage::url($item->file) }}"
+download
+class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1 rounded">
+
+Download
+</a>
+
+</div>
+
+@else
+
+-
+
+@endif
+
+</td>
 
 <td class="p-3 border">
 <div class="flex justify-center gap-2">
