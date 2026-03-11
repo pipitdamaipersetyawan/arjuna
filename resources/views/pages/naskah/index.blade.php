@@ -1,9 +1,5 @@
 <x-app-layout>
 
-@php
-use Illuminate\Support\Facades\Storage;
-@endphp
-
 
 <div class="w-full px-4">
 
