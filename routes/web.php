@@ -218,8 +218,7 @@ Route::get('/preview-file/{file}', function ($file) {
 
     return Response::file($path);
 
-})->name('preview.file');
-
+})->where('file', '.*')->name('preview.file');
 
 
 /*

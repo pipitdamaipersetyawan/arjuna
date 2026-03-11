@@ -163,7 +163,7 @@ Filter
 {{-- tombol --}}
 <div class="flex gap-2">
 
-<a href="{{ url('file/naskah/'.basename($item->file)) }}"
+<a href="{{ route('preview.file', basename($item->file)) }}"
 target="_blank"
 class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1 rounded">
 Preview
