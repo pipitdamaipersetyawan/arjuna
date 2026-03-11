@@ -151,34 +151,39 @@ Filter
 
 <td class="p-3 border text-center">
 
-@if(!empty($item->file))
+@if($item->file)
 
-<div class="flex justify-center gap-2">
+<div class="flex flex-col items-center gap-1">
+
+{{-- Nama file --}}
+<div class="text-xs text-slate-600 break-all">
+{{ $item->file ? basename($item->file) : '-' }}
+</div>
+
+{{-- tombol --}}
+<div class="flex gap-2">
 
 <a href="{{ Storage::url($item->file) }}"
 target="_blank"
 class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1 rounded">
-
 Preview
 </a>
 
 <a href="{{ Storage::url($item->file) }}"
 download
 class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1 rounded">
-
 Download
 </a>
 
 </div>
 
+</div>
+
 @else
-
 -
-
 @endif
 
 </td>
-
 <td class="p-3 border">
 <div class="flex justify-center gap-2">
 

@@ -13,6 +13,9 @@ use App\Http\Controllers\LaporanController;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\KlasifikasiImport;
 use App\Imports\KlasifikasiUpdateNamaImport;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
+
 
 
 /*
@@ -204,6 +207,19 @@ Route::middleware(['auth'])->group(function () {
     });
 
 });
+
+Route::get('/preview-file/{file}', function ($file) {
+
+    $path = storage_path('app/public/naskah/'.$file);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return Response::file($path);
+
+})->name('preview.file');
+
 
 
 /*

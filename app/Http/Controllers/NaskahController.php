@@ -297,7 +297,13 @@ $query = Naskah::with('tujuan')
                 Storage::disk('public')->delete($item->file);
             }
 
-            $filePath = $request->file('file_naskah')->store('naskah','public');
+           $file = $request->file('file_naskah');
+
+$namaFile = time().'_'.$file->getClientOriginalName();
+
+$file->move(public_path('storage/naskah'), $namaFile);
+
+$filePath = 'naskah/'.$namaFile;
         }
 
         $item->update([
