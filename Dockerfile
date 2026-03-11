@@ -1,37 +1,84 @@
+# ================================
+# Base Image
+# ================================
 FROM php:8.2-cli
 
-WORKDIR /app
-
+# ================================
+# Install System Packages
+# ================================
 RUN apt-get update && apt-get install -y \
     git \
-    unzip \
     curl \
+    unzip \
+    zip \
+    libzip-dev \
     libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libpq-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    libzip-dev \
-    zip \
     nodejs \
     npm
 
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo_mysql mysqli zip
+# ================================
+# Install PHP Extensions
+# ================================
+RUN docker-php-ext-install \
+    pdo \
+    pdo_mysql \
+    zip \
+    gd
 
+# ================================
+# Install Composer
+# ================================
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# ================================
+# Set Working Directory
+# ================================
+WORKDIR /app
+
+# ================================
+# Copy Project
+# ================================
 COPY . .
 
+# ================================
+# Install Laravel Dependencies
+# ================================
 RUN composer install --no-dev --optimize-autoloader
+
+# ================================
+# Install Node Dependencies
+# ================================
 RUN npm install
+
+# ================================
+# Build Vite Assets
+# ================================
 RUN npm run build
 
-RUN chmod -R 775 storage bootstrap/cache
+# ================================
+# Laravel Cache Optimization
+# ================================
+RUN php artisan config:clear
+RUN php artisan route:clear
+RUN php artisan view:clear
+RUN php artisan cache:clear
 
-EXPOSE 8080
+# ================================
+# Storage Link
+# ================================
+RUN php artisan storage:link || true
 
-CMD php artisan config:clear && \
-    php artisan cache:clear && \
-    php artisan route:clear && \
-    php artisan view:clear && \
-    php artisan storage:link && \
-    php artisan serve --host=0.0.0.0 --port=8080
+# ================================
+# Railway Port
+# ================================
+ENV PORT=8080
+
+# ================================
+# Start Laravel Server
+# ================================
+CMD php artisan serve --host=0.0.0.0 --port=$PORT
