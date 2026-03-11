@@ -163,13 +163,13 @@ Filter
 {{-- tombol --}}
 <div class="flex gap-2">
 
-<a href="{{ Storage::url($item->file) }}"
+<a href="{{ url('file/naskah/'.basename($item->file)) }}"
 target="_blank"
 class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1 rounded">
 Preview
 </a>
 
-<a href="{{ Storage::url($item->file) }}"
+<a href="{{ url('file/naskah/'.basename($item->file)) }}"
 download
 class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1 rounded">
 Download
