@@ -33,4 +33,5 @@ CMD php artisan config:clear && \
     php artisan cache:clear && \
     php artisan route:clear && \
     php artisan view:clear && \
-    php -S 0.0.0.0:8080 -t public public/index.php
+    php artisan storage:link && \
+    php artisan serve --host=0.0.0.0 --port=8080
