@@ -141,9 +141,16 @@ class NaskahController extends Controller
 
     $filePath = null;
 
-    if ($request->hasFile('file_naskah')) {
-        $filePath = $request->file('file_naskah')->store('naskah','public');
-    }
+if ($request->hasFile('file_naskah')) {
+
+    $file = $request->file('file_naskah');
+
+    $nama = time().'_'.$file->getClientOriginalName();
+
+    $file->move(public_path('storage/naskah'), $nama);
+
+    $filePath = 'naskah/'.$nama;
+}
 
     $naskah = Naskah::create([
         'tanggal_surat'    => $request->tanggal_surat,
