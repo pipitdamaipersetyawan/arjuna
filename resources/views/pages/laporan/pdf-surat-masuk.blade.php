@@ -146,19 +146,29 @@ SEMUA DATA
 
 <tbody>
 
-@foreach($rows as $row)
+@php
+$rows = $rows ?? [];
+@endphp
+
+@forelse($rows as $row)
 
 <tr>
-<td align="center">{{ $row[0] }}</td>
-<td align="center">{{ $row[1] }}</td>
-<td>{{ $row[2] }}</td>
-<td>{{ $row[4] }}</td>
-<td>{{ $row[5] }}</td>
-<td align="center">{{ $row[6] }}</td>
-<td>{{ $row[7] }}</td>
+<td align="center">{{ $row[0] ?? '' }}</td>
+<td align="center">{{ $row[1] ?? '' }}</td>
+<td>{{ $row[2] ?? '' }}</td>
+<td>{{ $row[4] ?? '' }}</td>
+<td>{{ $row[5] ?? '' }}</td>
+<td align="center">{{ $row[6] ?? '' }}</td>
+<td>{{ $row[7] ?? '' }}</td>
 </tr>
 
-@endforeach
+@empty
+
+<tr>
+<td colspan="7" align="center">Tidak ada data</td>
+</tr>
+
+@endforelse
 
 </tbody>
 </table>
