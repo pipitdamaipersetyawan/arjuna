@@ -69,50 +69,8 @@ public function suratMasuk(Request $request)
 
 public function suratMasukPdf(Request $request)
 {
-
-$data = $this->filterSuratMasuk($request)
-    ->orderBy('tanggal_surat','asc')
-    ->get();
-
-$rows = $data->values()->map(function($d,$i){
-
-return [
-
-$i + 1,
-Carbon::parse($d->tanggal_surat)->format('d M Y'),
-$d->surat_dari,
-$d->nomor_surat,
-$d->isi_informasi,
-$d->klasifikasi_kode
-
-];
-
-});
-
-$pdf = Pdf::loadView(
-
-'layouts.pdf-laporan',
-
-[
-'judul' => 'LAPORAN SURAT MASUK',
-
-'columns' => [
-'No',
-'Tanggal',
-'Pengirim',
-'Nomor Surat',
-'Isi Informasi',
-'Klasifikasi'
-],
-
-'rows' => $rows
-
-]
-
-);
-
-return $pdf->download('laporan-surat-masuk.pdf');
-
+    $pdf = Pdf::loadHTML('<h1>TEST PDF BERHASIL</h1>');
+    return $pdf->download('test.pdf');
 }
 
 
