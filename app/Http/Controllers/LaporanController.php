@@ -80,11 +80,11 @@ return [
 
 $i + 1,
 
-Carbon::parse($d->tanggal)->format('d F Y'), // Tanggal Input
+Carbon::parse($d->tanggal)->format('d F Y'),
 
 $d->surat_dari,
 
-Carbon::parse($d->tanggal_surat)->format('d F Y'), // Tanggal Surat
+Carbon::parse($d->tanggal_surat)->format('d F Y'),
 
 $d->nomor_surat,
 
@@ -92,7 +92,7 @@ $d->isi_informasi,
 
 $d->klasifikasi_kode,
 
-$d->keterangan ?? '-' // Keterangan
+$d->keterangan ?? '-'
 
 ];
 
@@ -101,16 +101,6 @@ $d->keterangan ?? '-' // Keterangan
 $pdf = Pdf::loadView(
 'pages.laporan.pdf-surat-masuk',
 [
-'columns' => [
-'No',
-'Tanggal Input',
-'Surat Dari',
-'Tanggal Surat',
-'No Surat',
-'Isi Informasi',
-'Klasifikasi',
-'Keterangan'
-],
 'rows' => $rows
 ]
 );
@@ -343,14 +333,20 @@ $data = $this->filterArsip($request)
 ->get();
 
 
-$rows = $data->map(function($d){
+$rows = $data->values()->map(function($d,$i){
 
 return [
 
+$i + 1,
+
 $d->jenis,
+
 Carbon::parse($d->tanggal_surat)->format('d M Y'),
+
 $d->nomor_surat,
+
 $d->pengirim,
+
 $d->isi
 
 ];
@@ -359,24 +355,10 @@ $d->isi
 
 
 $pdf = Pdf::loadView(
-'pages.laporan.pdf-surat-masuk',
-
+'pages.laporan.pdf-arsip',
 [
-'judul' => 'LAPORAN ARSIP INAKTIF',
-
-'columns' => [
-'No',
-'Jenis',
-'Tanggal',
-'Nomor Surat',
-'Pengirim',
-'Isi'
-],
-
 'rows' => $rows
-
 ]
-
 );
 
 
