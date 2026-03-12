@@ -74,35 +74,9 @@ $data = $this->filterSuratMasuk($request)
     ->orderBy('tanggal_surat','asc')
     ->get();
 
-$rows = $data->values()->map(function($d,$i){
-
-return [
-
-$i + 1,
-
-Carbon::parse($d->tanggal)->format('d F Y'),
-
-$d->surat_dari,
-
-Carbon::parse($d->tanggal_surat)->format('d F Y'),
-
-$d->nomor_surat,
-
-$d->isi_informasi,
-
-$d->klasifikasi_kode,
-
-$d->keterangan ?? '-'
-
-];
-
-});
-
 $pdf = Pdf::loadView(
 'pages.laporan.pdf-surat-masuk',
-[
-'rows' => $rows
-]
+compact('data')
 );
 
 return $pdf->download('laporan-surat-masuk.pdf');
