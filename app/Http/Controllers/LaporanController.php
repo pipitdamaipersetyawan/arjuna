@@ -54,25 +54,12 @@ private function filterSuratMasuk(Request $request)
 }
 
 
-public function suratMasuk(Request $request)
-{
-    Carbon::setLocale('id');
-
-    $data = $this->filterSuratMasuk($request)
-        ->orderBy('tanggal_surat','asc')
-        ->paginate(10)
-        ->withQueryString();
-
-    return view('pages.laporan.surat-masuk', compact('data'));
-}
-
-
 public function suratMasukPdf(Request $request)
 {
 
 $data = $this->filterSuratMasuk($request)
-    ->orderBy('tanggal_surat','asc')
-    ->get();
+->orderBy('tanggal_surat','asc')
+->get();
 
 $pdf = Pdf::loadView(
 'pages.laporan.pdf-surat-masuk',
@@ -88,16 +75,15 @@ public function suratMasukExcel(Request $request)
 {
 
 $data = $this->filterSuratMasuk($request)
-    ->orderBy('tanggal_surat','asc')
-    ->get();
+->orderBy('tanggal_surat','asc')
+->get();
 
 return Excel::download(
-    new SuratMasukExport($data),
-    'laporan-surat-masuk.xlsx'
+new SuratMasukExport($data),
+'laporan-surat-masuk.xlsx'
 );
 
 }
-
 
 /*
 |--------------------------------------------------------------------------

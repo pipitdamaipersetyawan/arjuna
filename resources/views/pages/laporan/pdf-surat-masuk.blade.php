@@ -5,17 +5,13 @@
 
 <style>
 
-@page {
-margin:25px 30px;
-}
-
 body{
 font-family: DejaVu Sans, sans-serif;
 font-size:11px;
 }
 
 table{
-border-collapse: collapse;
+border-collapse:collapse;
 width:100%;
 }
 
@@ -26,7 +22,6 @@ padding:4px;
 
 th{
 background:#f2f2f2;
-text-align:center;
 }
 
 .judul{
@@ -51,19 +46,19 @@ LAPORAN SURAT MASUK
 
 <tr>
 
-<th width="5%">No</th>
+<th>No</th>
 
-<th width="15%">Tanggal Input</th>
+<th>Tanggal Input</th>
 
-<th width="20%">Pengirim</th>
+<th>Pengirim</th>
 
-<th width="20%">No Surat</th>
+<th>No Surat</th>
 
-<th width="25%">Isi Informasi</th>
+<th>Isi Informasi</th>
 
-<th width="10%">Klasifikasi</th>
+<th>Klasifikasi</th>
 
-<th width="15%">Keterangan</th>
+<th>Keterangan</th>
 
 </tr>
 
@@ -71,43 +66,31 @@ LAPORAN SURAT MASUK
 
 <tbody>
 
-@forelse($data as $i => $row)
+@foreach($data as $i => $row)
 
 <tr>
 
-<td align="center">{{ $i+1 }}</td>
+<td>{{ $i+1 }}</td>
 
-<td align="center">
-{{ \Carbon\Carbon::parse($row->tanggal ?? now())->translatedFormat('d F Y') }}
-</td>
+<td>{{ $row->tanggal }}</td>
 
-<td>{{ $row->surat_dari ?? '-' }}</td>
+<td>{{ $row->surat_dari }}</td>
 
-<td>{{ $row->nomor_surat ?? '-' }}</td>
+<td>{{ $row->nomor_surat }}</td>
 
-<td>{{ $row->isi_informasi ?? '-' }}</td>
+<td>{{ $row->isi_informasi }}</td>
 
-<td align="center">{{ $row->klasifikasi_kode ?? '-' }}</td>
+<td>{{ $row->klasifikasi_kode }}</td>
 
 <td>{{ $row->keterangan ?? '-' }}</td>
 
 </tr>
 
-@empty
-
-<tr>
-<td colspan="7" align="center">Tidak ada data</td>
-</tr>
-
-@endforelse
+@endforeach
 
 </tbody>
 
 </table>
-
-<br>
-
-Total Data : {{ $data->count() }}
 
 </body>
 </html>

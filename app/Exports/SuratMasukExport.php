@@ -13,7 +13,7 @@ protected $data;
 
 public function __construct($data)
 {
-    $this->data = $data;
+$this->data = $data;
 }
 
 public function collection()
@@ -45,6 +45,7 @@ $row->keterangan ?? '-'
 
 public function headings(): array
 {
+
 return [
 
 'No',
@@ -53,7 +54,7 @@ return [
 
 'Pengirim',
 
-'No Surat',
+'Nomor Surat',
 
 'Isi Informasi',
 
@@ -62,6 +63,7 @@ return [
 'Keterangan'
 
 ];
+
 }
 
 }
