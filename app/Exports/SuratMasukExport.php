@@ -4,15 +4,16 @@ namespace App\Exports;
 
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class SuratMasukExport implements FromCollection
+class SuratMasukExport implements FromCollection, WithHeadings
 {
 
 protected $data;
 
 public function __construct($data)
 {
-$this->data = $data;
+    $this->data = $data;
 }
 
 public function collection()
@@ -22,24 +23,45 @@ return collect($this->data)->map(function($row,$i){
 
 return [
 
-'No'=>$i+1,
+$i+1,
 
-'Tanggal Input'=>$row->tanggal,
+$row->tanggal ?? '',
 
-'Pengirim'=>$row->surat_dari,
+$row->surat_dari ?? '',
 
-'No Surat'=>$row->nomor_surat,
+$row->nomor_surat ?? '',
 
-'Isi Informasi'=>$row->isi_informasi,
+$row->isi_informasi ?? '',
 
-'Klasifikasi'=>$row->klasifikasi_kode,
+$row->klasifikasi_kode ?? '',
 
-'Keterangan'=>$row->keterangan ?? '-'
+$row->keterangan ?? '-'
 
 ];
 
 });
 
+}
+
+public function headings(): array
+{
+return [
+
+'No',
+
+'Tanggal Input',
+
+'Pengirim',
+
+'No Surat',
+
+'Isi Informasi',
+
+'Klasifikasi',
+
+'Keterangan'
+
+];
 }
 
 }

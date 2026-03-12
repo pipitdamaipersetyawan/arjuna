@@ -71,29 +71,35 @@ LAPORAN SURAT MASUK
 
 <tbody>
 
-@foreach($data as $i => $row)
+@forelse($data as $i => $row)
 
 <tr>
 
 <td align="center">{{ $i+1 }}</td>
 
 <td align="center">
-{{ \Carbon\Carbon::parse($row->tanggal)->translatedFormat('d F Y') }}
+{{ \Carbon\Carbon::parse($row->tanggal ?? now())->translatedFormat('d F Y') }}
 </td>
 
-<td>{{ $row->surat_dari }}</td>
+<td>{{ $row->surat_dari ?? '-' }}</td>
 
-<td>{{ $row->nomor_surat }}</td>
+<td>{{ $row->nomor_surat ?? '-' }}</td>
 
-<td>{{ $row->isi_informasi }}</td>
+<td>{{ $row->isi_informasi ?? '-' }}</td>
 
-<td align="center">{{ $row->klasifikasi_kode }}</td>
+<td align="center">{{ $row->klasifikasi_kode ?? '-' }}</td>
 
 <td>{{ $row->keterangan ?? '-' }}</td>
 
 </tr>
 
-@endforeach
+@empty
+
+<tr>
+<td colspan="7" align="center">Tidak ada data</td>
+</tr>
+
+@endforelse
 
 </tbody>
 
@@ -101,7 +107,7 @@ LAPORAN SURAT MASUK
 
 <br>
 
-Total Data : {{ count($data) }}
+Total Data : {{ $data->count() }}
 
 </body>
 </html>
