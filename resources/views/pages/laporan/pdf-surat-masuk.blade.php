@@ -90,11 +90,6 @@ table.data td {
     vertical-align: top;
 }
 
-.qr-box {
-    text-align: center;
-    font-size: 9px;
-}
-
 .page-number {
     position: fixed;
     bottom: 10px;
@@ -104,83 +99,85 @@ table.data td {
 
 </style>
 </head>
+
 <body>
 
-{{-- ================== KOP ================== --}}
 <table class="kop-table">
 <tr>
 <td width="15%">
-    <img src="{{ public_path('logo.png') }}" width="75">
+<img src="{{ public_path('logo.png') }}" width="75">
 </td>
+
 <td class="kop-text">
-    <div class="besar">PEMERINTAH KOTA SEMARANG</div>
-    <div class="sedang">BAGIAN ADMINISTRASI PEMBANGUNAN</div>
-    Gedung Moch Ikhsan Lt 5
+<div class="besar">PEMERINTAH KOTA SEMARANG</div>
+<div class="sedang">BAGIAN ADMINISTRASI PEMBANGUNAN</div>
+Gedung Moch Ikhsan Lt 5
 </td>
+
 <td width="15%"></td>
 </tr>
 </table>
 
 <div class="garis"></div>
 
-{{-- ================== JUDUL ================== --}}
 <div class="judul">LAPORAN SURAT MASUK</div>
 
 <div class="periode">
 Periode:
 @if(request('start') && request('end'))
-    {{ request('start') }} s/d {{ request('end') }}
+{{ request('start') }} s/d {{ request('end') }}
 @else
-    SEMUA DATA
+SEMUA DATA
 @endif
 </div>
 
-{{-- ================== TABEL ================== --}}
 <table class="data">
 <thead>
 <tr>
-    <th width="4%">No</th>
-    <th width="12%">Tanggal</th>
-    <th width="15%">Pengirim</th>
-    <th width="15%">No Surat</th>
-    <th width="20%">Isi</th>
-    <th width="12%">Klasifikasi</th>
+<th width="4%">No</th>
+<th width="12%">Tanggal Input</th>
+<th width="15%">Pengirim</th>
+<th width="15%">No Surat</th>
+<th width="20%">Isi Informasi</th>
+<th width="12%">Klasifikasi</th>
+<th width="12%">Keterangan</th>
 </tr>
 </thead>
+
 <tbody>
-@foreach($data as $i => $row)
+
+@foreach($rows as $row)
+
 <tr>
-    <td align="center">{{ $i+1 }}</td>
-    <td align="center">
-        {{ \Carbon\Carbon::parse($row->tanggal)->translatedFormat('d F Y') }}
-    </td>
-    <td>{{ $row->surat_dari }}</td>
-    <td>{{ $row->nomor_surat }}</td>
-    <td>{{ $row->isi_informasi }}</td>
-    <td align="center">{{ $row->klasifikasi_kode }}</td>
+<td align="center">{{ $row[0] }}</td>
+<td align="center">{{ $row[1] }}</td>
+<td>{{ $row[2] }}</td>
+<td>{{ $row[4] }}</td>
+<td>{{ $row[5] }}</td>
+<td align="center">{{ $row[6] }}</td>
+<td>{{ $row[7] }}</td>
 </tr>
+
 @endforeach
+
 </tbody>
 </table>
 
 <div class="total">
-Total Data: {{ count($data) }}
+Total Data: {{ count($rows) }}
 </div>
 
-{{-- ================== FOOTER ================== --}}
 <table class="footer-area">
 <tr>
 <td width="65%"></td>
-<td width="35%" class="qr-box">
-    Semarang, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}<br><br>
-    <img src="data:image/svg+xml;base64,{{ $qrCode }}" width="90"><br>
-    Scan untuk validasi laporan
+<td width="35%" style="text-align:center">
+Semarang, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
 </td>
 </tr>
 </table>
 
 <div class="page-number">
-    Halaman {PAGE_NUM} / {PAGE_COUNT}
+Halaman {PAGE_NUM} / {PAGE_COUNT}
 </div>
 
 </body>
