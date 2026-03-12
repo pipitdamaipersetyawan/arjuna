@@ -85,7 +85,7 @@ class SuratMasukExport implements
     */
     $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
     $drawing->setName('Logo');
-    $drawing->setPath(public_path('logo.png')); // pastikan file ada
+    $drawing->setPath(public_path('img/logo-arjuna.png'));// pastikan file ada
     $drawing->setHeight(70);
     $drawing->setCoordinates('A1');
     $drawing->setWorksheet($sheet);

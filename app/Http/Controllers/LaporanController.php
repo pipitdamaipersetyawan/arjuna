@@ -74,10 +74,11 @@ $data = $this->filterSuratMasuk($request)
     ->orderBy('tanggal_surat','asc')
     ->get();
 
-$rows = $data->map(function($d){
+$rows = $data->values()->map(function($d,$i){
 
 return [
 
+$i + 1,
 Carbon::parse($d->tanggal_surat)->format('d M Y'),
 $d->surat_dari,
 $d->nomor_surat,
