@@ -69,8 +69,54 @@ public function suratMasuk(Request $request)
 
 public function suratMasukPdf(Request $request)
 {
-    $pdf = Pdf::loadHTML('<h1>TEST PDF BERHASIL</h1>');
-    return $pdf->download('test.pdf');
+
+$data = $this->filterSuratMasuk($request)
+    ->orderBy('tanggal_surat','asc')
+    ->get();
+
+$rows = $data->values()->map(function($d,$i){
+
+return [
+
+$i + 1,
+
+Carbon::parse($d->tanggal)->format('d F Y'), // Tanggal Input
+
+$d->surat_dari,
+
+Carbon::parse($d->tanggal_surat)->format('d F Y'), // Tanggal Surat
+
+$d->nomor_surat,
+
+$d->isi_informasi,
+
+$d->klasifikasi_kode,
+
+$d->keterangan ?? '-' // Keterangan
+
+];
+
+});
+
+$pdf = Pdf::loadView(
+'pages.laporan.pdf-surat-masuk',
+[
+'columns' => [
+'No',
+'Tanggal Input',
+'Surat Dari',
+'Tanggal Surat',
+'No Surat',
+'Isi Informasi',
+'Klasifikasi',
+'Keterangan'
+],
+'rows' => $rows
+]
+);
+
+return $pdf->download('laporan-surat-masuk.pdf');
+
 }
 
 
@@ -313,8 +359,7 @@ $d->isi
 
 
 $pdf = Pdf::loadView(
-
-'layouts.pdf-laporan',
+'pages.laporan.pdf-surat-masuk',
 
 [
 'judul' => 'LAPORAN ARSIP INAKTIF',
